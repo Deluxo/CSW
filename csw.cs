@@ -37,6 +37,7 @@ namespace project
         private string AppId = "6ea5cf4906d41b9e4108e66624861864";
         private string Url = "http://api.openweathermap.org/data/2.5/";
         private string Units = "metric";
+        private string metric = "°C";
         private string Mode = "xml";
 
         public string request(string method, string city, string param = "")
@@ -60,12 +61,12 @@ namespace project
             string humidity = doc.SelectSingleNode("/current/humidity/@value").Value;
             string humidityUnit = doc.SelectSingleNode("/current/humidity/@unit").Value;
             string min = Math.Round(decimal.Parse(doc.SelectSingleNode("/current/temperature/@min").Value), 0).ToString();
-            string max = Math.Round(decimal.Parse(doc.SelectSingleNode("/current/temperature/@max").Value), 0).ToString();
+            //string max = Math.Round(decimal.Parse(doc.SelectSingleNode("/current/temperature/@max").Value), 0).ToString();
             string windName = doc.SelectSingleNode("/current/wind/speed/@name").Value;
             string cloudsName = doc.SelectSingleNode("/current/clouds/@name").Value;
             string weather = doc.SelectSingleNode("/current/weather/@value").Value;
             string t = "\t";
-            Console.WriteLine(weather+t+min+t+cloudsName+t+windName);
+            Console.WriteLine(weather+t+min+this.metric+t+cloudsName+t+windName);
         }
 
         public void forecast(string city, string days)
@@ -84,7 +85,7 @@ namespace project
                 string windString = el[i].SelectSingleNode("windSpeed/@name").Value;
                 string cloudString = el[i].SelectSingleNode("clouds/@value").Value;
                 string t = "\t";
-                Console.WriteLine(date+t+min+" -- "+max+t+symbol+t+cloudString+t+windString);
+                Console.WriteLine(date+t+min+this.metric+" -- "+max+this.metric+t+symbol+t+cloudString+t+windString);
             }
         }
 
