@@ -5,3 +5,5 @@ clean:
 install:
 	mcs csw.cs -out:bin/csw-linux
 	sudo cp bin/csw-linux /bin/csw
+remove:
+	sudo rm /bin/csw
