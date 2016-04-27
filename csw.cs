@@ -71,11 +71,7 @@ namespace project
 
         public void forecast(string city, string days)
         {
-            XmlDocument doc = this.parseXml(
-                    this.fetch(
-                        this.request("forecast/daily", city, "&cnt="+days)
-                        )
-                    );
+            XmlDocument doc = this.parseXml(this.fetch(this.request("forecast/daily", city, "&cnt="+days)));
             XmlNodeList el = doc.SelectNodes("/weatherdata/forecast/*");
             for (int i=0; i < el.Count; i++) {
                 string date = el[i].SelectSingleNode("@day").Value;
@@ -97,6 +93,8 @@ namespace project
                 data = w.DownloadString(url);
             } catch {
                 data = "no internet connection";
+                Console.WriteLine(data);
+                Environment.Exit(-1);
             }
             return data;
         }
