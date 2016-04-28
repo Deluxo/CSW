@@ -14,7 +14,11 @@ namespace project
                 switch (args[0])
                 {
                     case "-f":
-                        app.forecast(args[1], args[2]);
+                        if (args.Length < 3) {
+                            app.forecast(args[1], "7");
+                        } else {
+                            app.forecast(args[1], args[2]);
+                        }
                         break;
                     case "-w":
                         app.now(args[1]);
