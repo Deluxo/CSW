@@ -5,10 +5,56 @@ using System.Collections;
 
 namespace project
 {
+    public class AsciiArt
+    {
+        public string cloud = @"
+
+      .--.
+   .-(    ).
+  (___.__)__)
+
+";
+
+        public string partlyCloudy = @"
+    \  /
+  _ /"".-.
+    \_(   ).
+    /(___(__)
+
+";
+
+        public string sunRain = @"
+  _`/"".-.
+   ,\_(   ).
+    /(___(__)
+      ‘ ‘ ‘ ‘
+     ‘ ‘ ‘ ‘
+";
+
+        public string storm = @"
+      .-.
+     (   ).
+    (___(__)
+   ‚‘⚡‘‚⚡‚‘
+   ‚’‚’⚡’‚’
+";
+
+        public string sun = @"
+     \   /
+      .-.
+   ― (   ) ―
+      `-’
+     /   \
+";
+
+    }
+
     public class Runtime
     {
         static void Main(string[] args)
         {
+            AsciiArt a = new AsciiArt();
+            Console.WriteLine(a.sun);
             Weather app = new Weather();
             if (args.Length > 0) {
                 switch (args[0])
