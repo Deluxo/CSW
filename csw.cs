@@ -53,8 +53,6 @@ namespace project
     {
         static void Main(string[] args)
         {
-            AsciiArt a = new AsciiArt();
-            Console.WriteLine(a.sun);
             Weather app = new Weather();
             if (args.Length > 0) {
                 switch (args[0])
