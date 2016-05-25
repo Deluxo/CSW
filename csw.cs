@@ -2,57 +2,15 @@ using System;
 using System.Net;
 using System.Xml;
 using System.Collections;
+using System.Diagnostics;
 
 namespace project
 {
-    public class AsciiArt
-    {
-        public string cloud = @"
-
-      .--.
-   .-(    ).
-  (___.__)__)
-
-";
-
-        public string partlyCloudy = @"
-    \  /
-  _ /"".-.
-    \_(   ).
-    /(___(__)
-
-";
-
-        public string sunRain = @"
-  _`/"".-.
-   ,\_(   ).
-    /(___(__)
-      ‘ ‘ ‘ ‘
-     ‘ ‘ ‘ ‘
-";
-
-        public string storm = @"
-      .-.
-     (   ).
-    (___(__)
-   ‚‘⚡‘‚⚡‚‘
-   ‚’‚’⚡’‚’
-";
-
-        public string sun = @"
-     \   /
-      .-.
-   ― (   ) ―
-      `-’
-     /   \
-";
-
-    }
-
     public class Runtime
     {
         static void Main(string[] args)
         {
+            string AppName = "CSW";
             Weather app = new Weather();
             if (args.Length > 0) {
                 switch (args[0])
@@ -64,8 +22,32 @@ namespace project
                             app.forecast(args[1], args[2]);
                         }
                         break;
+                    case "-nf":
+                    case "-fn":
+                        string w;
+                        if (args.Length < 3) {
+                            w = app.forecast(args[1], "7");
+                        } else {
+                            w = app.forecast(args[1], args[2]);
+                        }
+                        string notifier = "notify-send";
+                        string notifierArgs = AppName+" '"+w+"'";
+
+                        Process.Start(notifier, notifierArgs);
+                        Console.WriteLine(notifierArgs);
+                        break;
                     case "-w":
                         app.now(args[1]);
+                        break;
+                    case "-nw":
+                    case "-wn":
+                    case "-n":
+                        w = app.now(args[1]);
+                        notifier = "notify-send";
+                        notifierArgs = AppName+" '"+w+"'";
+
+                        Process.Start(notifier, notifierArgs);
+                        Console.WriteLine(notifierArgs);
                         break;
                     case "-h":
                         Console.WriteLine("csw [option] [argument 1] [argument 2]\n\nOptions:\n-f\tforecast. argument 1 is city name, argument 2 is number of days you want to get forcast for. Legitimate periods are from 1 to 16 days.\n-w\tweather. argument 1 is city name. Checkout current weather for given city.\n-h\tthis help message.");
@@ -100,7 +82,7 @@ namespace project
             return req;
         }
 
-        public void now(string city = "")
+        public string now(string city = "")
         {
             XmlDocument doc = this.parseXml(this.fetch(this.request("weather", city)));
             string cityName = doc.SelectSingleNode("/current/city/@name").Value;
@@ -114,13 +96,16 @@ namespace project
             string cloudsName = doc.SelectSingleNode("/current/clouds/@name").Value;
             string weather = doc.SelectSingleNode("/current/weather/@value").Value;
             string t = "\t";
-            Console.WriteLine(weather+t+min+this.metric+t+cloudsName+t+windName);
+            string val = weather+t+min+this.metric+t+cloudsName+t+windName;
+            Console.WriteLine(val);
+            return val;
         }
 
-        public void forecast(string city, string days)
+        public string forecast(string city, string days)
         {
             XmlDocument doc = this.parseXml(this.fetch(this.request("forecast/daily", city, "&cnt="+days)));
             XmlNodeList el = doc.SelectNodes("/weatherdata/forecast/*");
+            string val = "";
             for (int i=0; i < el.Count; i++) {
                 string date = el[i].SelectSingleNode("@day").Value;
                 string symbol = el[i].SelectSingleNode("symbol/@name").Value;
@@ -129,8 +114,10 @@ namespace project
                 string windString = el[i].SelectSingleNode("windSpeed/@name").Value;
                 string cloudString = el[i].SelectSingleNode("clouds/@value").Value;
                 string t = "\t";
-                Console.WriteLine(date+t+min+this.metric+" -- "+max+this.metric+t+symbol+t+cloudString+t+windString);
+                val += date+t+min+this.metric+" -- "+max+this.metric+t+symbol+t+windString+"\n";
             }
+            Console.WriteLine(val);
+            return val;
         }
 
         public string fetch(string url = "")
