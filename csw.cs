@@ -50,7 +50,7 @@ namespace project
                         Console.WriteLine(notifierArgs);
                         break;
                     case "-h":
-                        Console.WriteLine("csw [option] [argument 1] [argument 2]\n\nOptions:\n-f\tforecast. argument 1 is city name, argument 2 is number of days you want to get forcast for. Legitimate periods are from 1 to 16 days.\n-w\tweather. argument 1 is city name. Checkout current weather for given city.\n-h\tthis help message.");
+                        Console.WriteLine("csw [option] [argument 1] [argument 2]\n\nOptions:\n-f\tForecast. Argument 1 is city name, argument 2 is number of days you want to get forcast for. Legitimate periods are from 1 to 16 days.\n-w\tWeather. Argument 1 is city name. Checkout current weather for given city.\n-n\tNotification. Displays notification of the weather flag described before.\n-h\tthis help message.");
                         break;
                     default:
                         app.now(args[0]);
