@@ -1,0 +1,35 @@
+.\" Manpage for csw.
+.\" Contact l.levickas@gmail.com to correct errors or typos.
+.TH man 8 "25 May 2016" "1.0" "csw man page"
+.SH NAME
+csw \- check the weather data in a given city
+.SH SYNOPSIS
+csw [OPTION]... [CITY] [COUNTER]
+.SH DESCRIPTION
+csw is a console based weather checker written in C# (thus, C Sharp Weather). It can retrieve current weather data or the forecast up to 16 days from today. It uses OpenWeatherMap data and it's REST API.
+
+Option flags can be in any order.
+
+.SH OPTIONS
+.TP
+.BR \-h
+Display help text and exit.
+.TP
+.BR \-f
+Show forecast from today until the specified day. Supports maximum 16 days.
+.TP
+.BR \-w
+Show current weather.
+.TP
+.BR \-n
+Show the data through a desktop notification.
+Example: csw -fn Tokyo 3.
+This will show the 3 day forecast in Tokyo city in a desktop notification.
+.SH DEPENDENCIES
+CSW uses notify-send to provide information through a desktop notification. Make sure you have it if you want to use the -n flag.
+
+
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Lukas Levickas (l.levickas@gmail.com)
