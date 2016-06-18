@@ -96,7 +96,7 @@ namespace project
             string cloudsName = doc.SelectSingleNode("/current/clouds/@name").Value;
             string weather = doc.SelectSingleNode("/current/weather/@value").Value;
             string t = "\t";
-            string val = weather+t+min+this.metric+t+cloudsName+t+windName;
+            string val = min+this.metric+t+cloudsName+t+windName;
             Console.WriteLine(val);
             return val;
         }
@@ -114,7 +114,7 @@ namespace project
                 string windString = el[i].SelectSingleNode("windSpeed/@name").Value;
                 string cloudString = el[i].SelectSingleNode("clouds/@value").Value;
                 string t = "\t";
-                val += date+t+min+this.metric+" -- "+max+this.metric+t+symbol+t+windString+"\n";
+                val += date+t+min+" - "+max+this.metric+t+symbol+t+windString+"\n";
             }
             Console.WriteLine(val);
             return val;
