@@ -114,7 +114,7 @@ namespace project
                 string windString = el[i].SelectSingleNode("windSpeed/@name").Value;
                 string cloudString = el[i].SelectSingleNode("clouds/@value").Value;
                 string t = "\t";
-                val += date+t+min+" - "+max+this.metric+t+windString+t+symbol"\n";
+                val += date+t+min+" - "+max+this.metric+t+windString+t+symbol+"\n";
             }
             Console.WriteLine(val);
             return val;
