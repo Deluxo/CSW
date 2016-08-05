@@ -3,6 +3,7 @@ using System.Net;
 using System.Xml;
 using System.Collections;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace project
 {
@@ -42,6 +43,18 @@ namespace project
 							app.forecast(args[1], "7", true);
 						} else {
 							app.forecast(args[1], args[2], true);
+						}
+						break;
+					case "-fmd":
+					case "-fdm":
+					case "-mfd":
+					case "-mdf":
+					case "-dmf":
+					case "-dfm":
+						if (args.Length < 3) {
+							app.forecast(args[1], "7", true, true);
+						} else {
+							app.forecast(args[1], args[2], true, true);
 						}
 						break;
 					case "-w":
@@ -109,25 +122,31 @@ namespace project
 			return val;
 		}
 
-		public string forecast(string city, string days, bool minimal = false)
+		public string forecast(string city, string days, bool minimal = false,bool weekday = true)
 		{
 			XmlDocument doc = this.parseXml(this.fetch(this.request("forecast/daily", city, "&cnt="+days)));
 			XmlNodeList el = doc.SelectNodes("/weatherdata/forecast/*");
 			string val = "";
 			for (int i=0; i < el.Count; i++) {
 				string date = "";
+				string day = "";
 				string windString = "";
 				string t = "    ";
 				string symbol = el[i].SelectSingleNode("symbol/@name").Value;
 				string min = Math.Round(decimal.Parse(el[i].SelectSingleNode("temperature/@min").Value), 0).ToString();
 				string max = Math.Round(decimal.Parse(el[i].SelectSingleNode("temperature/@max").Value), 0).ToString();
 				string cloudString = el[i].SelectSingleNode("clouds/@value").Value;
+				if (weekday && minimal) {
+					day = DateTime
+						.Parse(el[i].SelectSingleNode("@day").Value, CultureInfo.InvariantCulture)
+						.ToString("ddd")+t;
+				}
 				if (!minimal) {
 					t = "\t\t";
 					date = el[i].SelectSingleNode("@day").Value+t;
 					windString = el[i].SelectSingleNode("windSpeed/@name").Value+t;
 				}
-				val += date+min+"-"+max+this.metric+t+windString+symbol+"\n";
+				val += date+day+min+"-"+max+this.metric+t+windString+symbol+"\n";
 			}
 			Console.WriteLine(val);
 			return val;
