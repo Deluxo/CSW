@@ -90,6 +90,10 @@ namespace project
 		private string Units = "metric";
 		private string metric = "°C";
 		private string Mode = "xml";
+		private static int spaces = 2;
+		private int dayLen = 3 + spaces;
+		private int minMaxLen = 2 + spaces;
+		private string delim = " ";
 
 		public string request(string method, string city, string param = "")
 		{
@@ -131,7 +135,6 @@ namespace project
 				string date = "";
 				string day = "";
 				string windString = "";
-				string t = "    ";
 				string symbol = el[i].SelectSingleNode("symbol/@name").Value;
 				string min = Math.Round(decimal.Parse(el[i].SelectSingleNode("temperature/@min").Value), 0).ToString();
 				string max = Math.Round(decimal.Parse(el[i].SelectSingleNode("temperature/@max").Value), 0).ToString();
@@ -139,14 +142,13 @@ namespace project
 				if (weekday && minimal) {
 					day = DateTime
 						.Parse(el[i].SelectSingleNode("@day").Value, CultureInfo.InvariantCulture)
-						.ToString("ddd")+t;
+						.ToString("ddd");
 				}
 				if (!minimal) {
-					t = "\t\t";
-					date = el[i].SelectSingleNode("@day").Value+t;
-					windString = el[i].SelectSingleNode("windSpeed/@name").Value+t;
+					date = el[i].SelectSingleNode("@day").Value;
+					windString = el[i].SelectSingleNode("windSpeed/@name").Value;
 				}
-				val += date+day+min+"-"+max+this.metric+t+windString+symbol+"\n";
+				val += printWeatherLine(date + day, min, max, windString + symbol) + "\n";
 			}
 			Console.WriteLine(val);
 			return val;
@@ -171,6 +173,41 @@ namespace project
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(xml);
 			return doc;
+		}
+
+		public string printWeatherLine(string day, string min, string max, string weatherString)
+		{
+			// day
+			string line = day;
+			int lineLen = this.dayLen;
+			if (min[0].ToString() == "-")
+				--lineLen;
+
+			while (line.Length <= lineLen)
+				line += this.delim;
+
+			//min
+			line += min;
+			lineLen = this.dayLen + this.minMaxLen;
+			if (max[0].ToString() == "-")
+				--lineLen;
+			while (line.Length != lineLen)
+				line += this.delim;
+
+			//max
+			line += max;
+			lineLen = this.dayLen + this.minMaxLen * 2;
+
+			//metric
+			line += " " + this.metric;
+
+			//string
+			for (int i = 0; i < spaces; ++i)
+				line += this.delim;
+
+			line +=  weatherString;
+
+			return line;
 		}
 	}
 }
