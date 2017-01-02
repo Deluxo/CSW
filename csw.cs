@@ -191,12 +191,14 @@ namespace project
 			lineLen = this.dayLen + this.minMaxLen;
 			if (max[0].ToString() == "-")
 				--lineLen;
-			while (line.Length != lineLen)
+			while (line.Length <= lineLen)
 				line += this.delim;
 
 			//max
 			line += max;
-			lineLen = this.dayLen + this.minMaxLen * 2;
+			lineLen = this.dayLen + this.minMaxLen * 2 - spaces;
+			while (line.Length <= lineLen)
+				line += this.delim;
 
 			//metric
 			line += " " + this.metric;
